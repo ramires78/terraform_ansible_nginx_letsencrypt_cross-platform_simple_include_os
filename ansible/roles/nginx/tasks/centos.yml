@@ -1,0 +1,15 @@
+  - name: install Nginx, EPEL, setrubleshoot und Letsencrypt
+    yum:
+      name    : "{{ item.name }}"
+      state   : "{{ item.state }}"
+    with_items:
+      - {name: "epel-release", state: "present"}
+      - {name: "setroubleshoot", state: "present"}
+      - {name: "nginx", state: "present"} 
+      - {name: "certbot", state: "present"}             
+      - {name: "vim", state: "latest"}  
+      - {name: "mc", state: "latest"}        
+    tags:
+      webservers_centos
+    notify: 
+      - start nginx    

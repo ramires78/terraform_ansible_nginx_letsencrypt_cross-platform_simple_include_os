@@ -1,0 +1,12 @@
+  - name: install Nginx und Letsencrypt on ubuntu
+    apt:
+      name    : "{{ item.name }}"
+      state   : "{{ item.state }}"
+    with_items:
+      - {name: "nginx=1.14.0*", state: "present"}
+      - {name: "letsencrypt", state: "latest"}
+      - {name: "mc", state: "latest"}    
+    tags:
+      webservers_ubuntu 
+    notify: 
+      - start nginx 

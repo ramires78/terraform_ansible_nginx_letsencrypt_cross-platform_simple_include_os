@@ -1,0 +1,40 @@
+  - name: add folder for item and sertifications virtual hosts on ubuntu
+    file:
+      path: /opt/myprojects/{{ item }}
+      state: directory
+      mode: '0755'
+    with_items: 
+      - "{{ dir_names.0 }}"
+      - "{{ dir_names.1 }}"   
+    tags:
+      - add_opt_folders_ubuntu
+
+  - name: Remove default nginx config
+    file: 
+      name: /etc/nginx/sites-enabled/default
+      state: absent            
+    tags:
+      - del_default_ubuntu   
+    notify: 
+      - reload nginx       
+
+  - name: copy the nginx vhotsts config file and the content of the web site on ubuntu
+    template:
+      src: "{{ item.src }}"
+      dest: "{{ item.dest }}"
+      mode: "{{ item.mode }}" 
+    with_items:
+      - "{{ virtualconf_ubuntu }}"    
+    tags:
+      - erste_templates_ubuntu
+    notify: 
+      - reload nginx        
+
+  - name: Check NGINX configs
+    shell: 
+      cmd: "/usr/sbin/nginx -t"    
+    tags:
+      - check_nginx_ubuntu  
+
+  - name: Flush handlers
+    meta: flush_handlers               

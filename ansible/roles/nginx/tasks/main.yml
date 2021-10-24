@@ -1,0 +1,29 @@
+  - name: install Nginx und Letsencrypt on Ubuntu
+    include_tasks: ubuntu.yml
+    when: 
+      ansible_os_family == "Debian"  
+      
+  - name: install Nginx, EPEL, setrubleshoot und Letsencrypt on Centos
+    include_tasks: centos.yml
+    when: 
+      ansible_os_family == "RedHat"  
+
+  - name: add folder for my website
+    file:
+      path: /opt/myprojects
+      state: directory
+      mode: '0755'  
+    tags:
+      - add_opt_folders_website    
+                    
+  - name: copy the nginx config file on ubuntu
+    template:
+      src: "{{ item.src }}"
+      dest: "{{ item.dest }}"
+      mode: "{{ item.mode }}" 
+    with_items:
+      - "{{ virtualconf }}"       
+    tags:
+      - nginx_conf 
+    notify: 
+      - reload nginx       

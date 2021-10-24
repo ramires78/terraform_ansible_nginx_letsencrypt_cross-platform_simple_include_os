@@ -1,0 +1,17 @@
+  - name: letsencrypt and cron Centos
+    include_tasks: centos.yml
+    when: 
+      ansible_os_family == "RedHat" 
+
+  - name: letsencrypt and cron Ubuntu
+    include_tasks: ubuntu.yml
+    when: 
+      ansible_os_family == "Debian"            
+
+  - name: Aktualisieren der Diffie-Hellman-Parameter
+    shell:
+      cmd: "openssl dhparam -out /etc/ssl/certs/dhparam.pem 2048"
+    tags:
+      hellman                       
+
+      

@@ -1,0 +1,9 @@
+tls_dir_names: 
+  - acme
+  - denisdebian.devops.rebrain.srwx.net
+  - denisredhat.devops.rebrain.srwx.net
+virtualconf_ubuntu:
+  - {src: 'virt_hosts_443.conf.j2', dest: '/etc/nginx/conf.d/{{ tls_dir_names.1 }}.conf', mode: '0755'}
+virtualconf_centos:
+  - {src: 'virt_hosts_443.conf.j2', dest: '/etc/nginx/conf.d/{{ tls_dir_names.2 }}.conf', mode: '0755'}
+letsencrypt_renew_email: ramires@inbox.ru  

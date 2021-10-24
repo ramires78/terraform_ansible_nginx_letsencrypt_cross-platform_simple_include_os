@@ -1,0 +1,24 @@
+server {
+	listen {{ listen_http }};
+	listen [::]:{{ listen_http }};
+
+	{% if ansible_os_family == "Debian" %}
+	server_name {{ dir_names.1 }} www.{{ dir_names.1 }};
+	root /opt/myprojects/{{ dir_names.1 }};
+	index index.html index.htm;
+  
+    location /.well-known {
+      root /opt/myprojects/{{ dir_names.0 }};      
+  }
+      {% endif %}
+
+	{% if ansible_os_family == "RedHat" %}
+	server_name {{ dir_names.2 }} www.{{ dir_names.2 }};
+	root /opt/myprojects/{{ dir_names.2 }};
+	index index.html index.htm;	
+
+    location /.well-known {
+      root /opt/myprojects/{{ dir_names.0 }};      
+  }
+      {% endif %}
+  }

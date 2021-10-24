@@ -1,0 +1,65 @@
+server {
+  listen {{ listen_http }};
+  listen [::]:{{ listen_http }};
+
+  {% if ansible_os_family == "Debian" %}
+  server_name {{ tls_dir_names.1 }} www.{{ tls_dir_names.1 }};
+  root /opt/myprojects/{{ tls_dir_names.1 }};
+  index index.html index.htm index.nginx-debian.html;
+
+    location /.well-known {
+      root /opt/myprojects/{{ tls_dir_names.0 }};      
+  }
+
+      location / {
+      return 301 https://{{ tls_dir_names.1 }}$request_uri;
+    } 
+ } 
+
+server {
+    listen {{ listen_http2 }} ssl;
+    ssl_certificate /etc/letsencrypt/live/{{ tls_dir_names.1 }}/fullchain.pem;
+    ssl_certificate_key /etc/letsencrypt/live/{{ tls_dir_names.1 }}/privkey.pem;
+    ssl_protocols TLSv1.3;
+    ssl_dhparam /etc/ssl/certs/dhparam.pem;
+
+    location / {
+      root /opt/myprojects/{{ tls_dir_names.1 }};
+      index index.html index.htm;
+    }
+    
+    server_name  {{ tls_dir_names.1 }} www.{{ tls_dir_names.1 }};
+
+}
+    {% endif %}
+
+{% if ansible_os_family == "RedHat" %}
+  server_name {{ tls_dir_names.2 }} www.{{ tls_dir_names.2 }};
+  root /opt/myprojects/{{ tls_dir_names.2 }};
+  index index.html index.htm index.nginx-debian.html;
+
+    location /.well-known {
+      root /opt/myprojects/{{ tls_dir_names.0 }};      
+  }
+
+      location / {
+      return 301 https://{{ tls_dir_names.2 }}$request_uri;
+    } 
+ } 
+
+server {
+    listen {{ listen_http2 }} ssl;
+    ssl_certificate /etc/letsencrypt/live/{{ tls_dir_names.2 }}/fullchain.pem;
+    ssl_certificate_key /etc/letsencrypt/live/{{ tls_dir_names.2 }}/privkey.pem;
+    ssl_protocols TLSv1.3;
+    ssl_dhparam /etc/ssl/certs/dhparam.pem;
+
+    location / {
+      root /opt/myprojects/{{ tls_dir_names.2 }};
+      index index.html index.htm;
+    }
+    
+    server_name  {{ tls_dir_names.2 }} www.{{ tls_dir_names.2 }};
+
+}
+    {% endif %}

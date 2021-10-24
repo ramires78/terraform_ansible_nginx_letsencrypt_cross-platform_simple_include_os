@@ -1,0 +1,29 @@
+  - name: take cert from certbot on centos
+    shell:
+      cmd: /usr/bin/certbot certonly --webroot -d {{ tls_dir_names.2 }} -d www.{{ tls_dir_names.2 }} -w /opt/myprojects/{{ tls_dir_names.0 }} -m {{ letsencrypt_renew_email }} --agree-tos 
+    tags:
+      - certbot_cert_centos
+    notify: 
+      - reload nginx
+
+  - name: Add certbot cronjob for cert renewal on centos
+    cron:
+      name: certbot_renewal
+      special_time: weekly
+      job: /usr/bin/certbot --renew-by-default certonly -n --webroot -w /opt/myprojects/{{ tls_dir_names.0 }}  -m {{ letsencrypt_renew_email }} --agree-tos -d {{ tls_dir_names.2 }} -d www.{{ tls_dir_names.2 }} && systemctl reload nginx
+    when:  
+      ansible_os_family == "RedHat" 
+    tags:
+      - cron_cert_centos
+
+  - name: copy the new 443 nginx vhotsts config file on centos
+    template:
+      src: "{{ item.src }}"
+      dest: "{{ item.dest }}"
+      mode: "{{ item.mode }}" 
+    with_items:
+      - "{{ virtualconf_centos}}"  
+    tags:
+      - new_host_centos
+    notify: 
+      - reload nginx          
