@@ -1,4 +1,7 @@
 ## Description
+Ansible is a universal tool and allows you to work with the absolute majority of operating systems and various equipment, including network equipment. When you first connect to the host, Ansible collects information about the system and, based on this data, can perform certain tasks. You are probably wondering why this is needed? - This is necessary to ensure the universalization and abstraction of applications and services from the systems on which they will run.
+
+How it works? - Various services / utilities on different systems. For example, package managers are different on most systems, but in general they are designed to perform similar tasks. To do this, this system provides the ability to perform a task / use a variable, taking into account some conditions, for example, which OS is used on the host.
 
 ### Ansible. TLS (NGINX+Let's+os_family Encrypt)
 
